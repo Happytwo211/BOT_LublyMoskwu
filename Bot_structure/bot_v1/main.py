@@ -1,45 +1,63 @@
+import json
+
 import telebot
 from telebot import types
 from Sistem_files import token, admin_list
+import requests
+from bs4 import BeautifulSoup
+
 
 
 bot = telebot.TeleBot(token.TOKEN)
 admin_id = admin_list.admin_id
 
 
+
+
 inline_kb_st = types.InlineKeyboardMarkup(row_width=2)
 inline_bt_1 = types.InlineKeyboardButton('Запустить "ЛюМ"', 'https://www.wikipedia.org')
 inline_bt_2 = types.InlineKeyboardButton('Московская Афиша', 'https://www.afisha.ru')
-# inline_bt_3 = types.InlineKeyboardButton('Cтать частичкой ЛЮМ', 'https://t.me/lum_moscow')
-inline_bt_4 = types.InlineKeyboardButton(text="О нас!",
-                                         callback_data='about_us')
-inline_kb_st.add(inline_bt_1).add(inline_bt_2).add(inline_bt_4)
+inline_bt_3 = types.InlineKeyboardButton('Наша Афиша (прямо в боте)', callback_data='check_lum_afisha')
+inline_bt_4 = types.InlineKeyboardButton(text="О нас!", callback_data='about_us')
+inline_bt_5 = types.InlineKeyboardButton('Наша Афиша', 'https://t.me/+O9krp9Je02RjNWEy')
+
+inline_kb_st.add(inline_bt_1).add(inline_bt_2).add(inline_bt_5).add(inline_bt_4).add(inline_bt_3)
 
 keyboard_start = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2,
                                                input_field_placeholder='"ЛюМ"- Люблю Москву!',
                                                    one_time_keyboard=True)
-button1 = types.KeyboardButton('Кнопка 1')
+
+button1 = types.KeyboardButton('Домашняя страница')
 button2 = types.KeyboardButton('Кнопка 2')
 button3 = types.KeyboardButton('Кнопка 3')
 
 keyboard_start.add(button1, button2, button3)  # Кнопки по вертикали
-# keyboard.add(button1).add(button2).add(button3) #.add(button4).add(button5) #Кнопки по шиирине
 
+
+
+
+# keyboard.add(button1).add(button2).add(button3) #.add(button4).add(button5) #Кнопки по шиирине
 
 
 class CommandStart:
 
+
     @bot.message_handler(commands=['start'])
     def handle_start(message):
-        bot.send_photo(message.chat.id, 'https://imgur.com/a/ooe4DMI',
-                       f'Добро пожалосвать, {message.chat.username}!'
+        bot.send_photo(message.chat.id, 'https://imgur.com/a/O1lm2hZ',
+                       f'Добро пожаловать, {message.chat.username}!'
                        f'\n'
-                       f'\nЭто бот проекта "ЛюМ" - Люблю Москву!'
+                       f'\nЭто телеграм-бот от проекта «ЛюМ» - Люблю Москву!'
                        f'\n'
-                       f'\nАудио-Гид для самостоятельных интерактивных экскурсий по Москве для всей семьи!', reply_markup=inline_kb_st)
+                       f'\n В меню ниже вы сможете найти:'
+                       f'\n -актуальную афишу событый в Москве'
+                       f'\n -авторские маршруты прогулок'
+                       f'\n -тематические квизы'
+                       , reply_markup=inline_kb_st)
 
 
         bot.send_message(message.chat.id, f'Или нажми на кнопку', reply_markup=keyboard_start, disable_notification=True)
+
 
 
 class AdmPanel:
@@ -58,30 +76,12 @@ class AdmPanel:
 
 
 
-class InlineKeyboard:
+class CallBackData:
 
-    @bot.callback_query_handler(func=lambda call: call.data == 'main_page')
-    def start_lum(call):
-        message = call.message
-        bot.send_photo(message.chat.id, 'https://imgur.com/a/0IQeUYB',
-                       f'Добро пожалосвать, {message.chat.username}!'
-                       f'\n'
-                       f'\nЭто телеграм-бот от проекта «ЛюМ» - Люблю Москву!'
-                       f'\n'
-                       f'\n В меню ниже вы сможете найти:'
-                       f'\n -актуальную афишу событый в Москве'
-                       f'\n -авторские маршруты прогулок'
-                       f'\n -тематические квизы'
-                       , reply_markup=inline_kb_st)
 
     @bot.callback_query_handler(func=lambda call: call.data == 'about_us')
     def start_lum(call):
-        # inline_social_media_kb = types.InlineKeyboardMarkup(row_width=3)
-        # vk_button = types.InlineKeyboardButton('VK', 'https://vk.com')
-        # tg_button = types.InlineKeyboardButton('TG', 'https://weba.telegram.org/')
-        # inst_button = types.InlineKeyboardButton('INSTA', 'https://instagram.com/')
-        # main_page_b = types.InlineKeyboardButton(text='На главную!', callback_data='main_page')
-        # inline_social_media_kb.add(vk_button).add(tg_button).add(inst_button).add(main_page_b)
+
         inline_kb_link = types.InlineKeyboardMarkup()
         inline_link = types.InlineKeyboardButton('t.me/lum_moscow'
                                                  , 'https://t.me/lum_moscow')
@@ -95,8 +95,9 @@ class InlineKeyboard:
                                           f'\nЕсли вы любите Москву так же, как и мы, или хотите познакомиться со столицей поближе то присоединяйтесь к нам!'
                                           f'\n'
                                           f'\nАктуальные новости о развитии проекта'
-                                          f'\n                                                  👇👇👇'
-                         , reply_markup=inline_kb_link)
+                                          f'\n'
+                                          f'                                                  👇👇👇' ,
+                         reply_markup=inline_kb_link)
 
 
         # bot.send_message(message.chat.id, f'Наша комманда:' ,reply_markup=inline_social_media_kb)
@@ -117,6 +118,17 @@ class InlineKeyboard:
         message = call.message
         bot.send_message(message.chat.id, f'Админская фукция 3')
 
+    @bot.callback_query_handler(func=lambda call: call.data == 'check_lum_afisha')
+    def call_back_data_afisha(call):
+        message = call.message
+        r = requests.get('http://127.0.0.1:8000/afisha_LUM/')
+        soup = BeautifulSoup(r.text, 'html.parser')
+        print(soup.p.string)
+        bot.send_message(message.chat.id, f'Афиша экскурсий на сегодня: \n{soup.p.string}')
+
+
+
+
 
 class NotHandle:
 
@@ -132,20 +144,22 @@ class ReplyButtons:
     @bot.message_handler(func=lambda message: True)
     def handle_message(message):
 
-        if message.text == 'Кнопка 1':
-            bot.send_message(message.chat.id, f'Вы нажали кнопку 1', reply_markup=keyboard_start)
+        if message.text == 'Домашняя страница':
+            # bot.send_message(message.chat.id,f'Вы перешли на домашнюю страницу',  reply_markup=inline_kb_st)
+            CommandStart.handle_start(message)
 
         elif message.text == 'Кнопка 2':
-            bot.send_message(message.chat.id, f'Вы нажали кнопку 2', reply_markup=keyboard_start)
+            bot.send_message(message.chat.id, f'Вы нажали кнопку 2', reply_markup=inline_kb_st)
 
         elif message.text == 'Кнопка 3':
-            bot.send_message(message.chat.id, f'Вы нажали кнопку 3', reply_markup=keyboard_start)
+            bot.send_message(message.chat.id, f'Вы нажали кнопку 3', reply_markup=inline_kb_st)
 
 
         else:
             bot.send_message(message.chat.id, f'Такой комманды нет'
                                               f'\nСписок доступных комманд',
                              reply_markup=inline_kb_st)
+
 
 
 
