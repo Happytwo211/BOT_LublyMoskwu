@@ -121,10 +121,14 @@ class CallBackData:
     @bot.callback_query_handler(func=lambda call: call.data == 'check_lum_afisha')
     def call_back_data_afisha(call):
         message = call.message
-        r = requests.get('http://127.0.0.1:8000/afisha_LUM/')
+        r = requests.get('http://127.0.0.1:8000/afisha_bot/')
+        print(r.text)
         soup = BeautifulSoup(r.text, 'html.parser')
-        print(soup.p.string)
         bot.send_message(message.chat.id, f'Афиша экскурсий на сегодня: \n{soup.p.string}')
+
+        # a = requests.get('http://127.0.0.1:8000/route')
+        # print(a.text)
+        # soup = BeautifulSoup(r.text, 'html.parser')
 
 
 
