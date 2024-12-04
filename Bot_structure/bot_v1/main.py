@@ -15,8 +15,8 @@ admin_id = admin_list.admin_id
 
 
 inline_kb_st = types.InlineKeyboardMarkup(row_width=2)
-inline_bt_1 = types.InlineKeyboardButton('Запустить "ЛюМ"', 'https://www.wikipedia.org')
-inline_bt_2 = types.InlineKeyboardButton('Московская Афиша', 'https://www.afisha.ru')
+inline_bt_1 = types.InlineKeyboardButton('Запустить "ЛюМ"', 'http://127.0.0.1:8000/route/#')
+inline_bt_2 = types.InlineKeyboardButton('Афиша Экскурсий', 'http://127.0.0.1:8000/afisha_LUM/')
 inline_bt_3 = types.InlineKeyboardButton('Наша Афиша (прямо в боте)', callback_data='check_lum_afisha')
 inline_bt_4 = types.InlineKeyboardButton(text="О нас!", callback_data='about_us')
 inline_bt_5 = types.InlineKeyboardButton('Наша Афиша', 'https://t.me/+O9krp9Je02RjNWEy')
