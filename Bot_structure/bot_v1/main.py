@@ -20,8 +20,8 @@ inline_bt_2 = types.InlineKeyboardButton('Московская Афиша', 'htt
 inline_bt_3 = types.InlineKeyboardButton('Наша Афиша (прямо в боте)', callback_data='check_lum_afisha')
 inline_bt_4 = types.InlineKeyboardButton(text="О нас!", callback_data='about_us')
 inline_bt_5 = types.InlineKeyboardButton('Наша Афиша', 'https://t.me/+O9krp9Je02RjNWEy')
-
-inline_kb_st.add(inline_bt_1).add(inline_bt_2).add(inline_bt_5).add(inline_bt_4).add(inline_bt_3)
+inline_bt_6 = types.InlineKeyboardButton('Квизы', )
+inline_kb_st.add(inline_bt_1).add(inline_bt_2).add(inline_bt_5).add(inline_bt_4).add(inline_bt_3).add(inline_bt_6)
 
 keyboard_start = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2,
                                                input_field_placeholder='"ЛюМ"- Люблю Москву!',
@@ -122,13 +122,13 @@ class CallBackData:
     def call_back_data_afisha(call):
         message = call.message
         r = requests.get('http://127.0.0.1:8000/afisha_bot/')
-        print(r.text)
         soup = BeautifulSoup(r.text, 'html.parser')
         bot.send_message(message.chat.id, f'Афиша экскурсий на сегодня: \n{soup.p.string}')
 
         # a = requests.get('http://127.0.0.1:8000/route')
         # print(a.text)
         # soup = BeautifulSoup(r.text, 'html.parser')
+
 
 
 
