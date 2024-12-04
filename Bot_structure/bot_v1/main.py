@@ -20,7 +20,7 @@ inline_bt_2 = types.InlineKeyboardButton('Московская Афиша', 'htt
 inline_bt_3 = types.InlineKeyboardButton('Наша Афиша (прямо в боте)', callback_data='check_lum_afisha')
 inline_bt_4 = types.InlineKeyboardButton(text="О нас!", callback_data='about_us')
 inline_bt_5 = types.InlineKeyboardButton('Наша Афиша', 'https://t.me/+O9krp9Je02RjNWEy')
-inline_bt_6 = types.InlineKeyboardButton('Квизы', )
+inline_bt_6 = types.InlineKeyboardButton('Квизы',"http://127.0.0.1:8000/quize/")
 inline_kb_st.add(inline_bt_1).add(inline_bt_2).add(inline_bt_5).add(inline_bt_4).add(inline_bt_3).add(inline_bt_6)
 
 keyboard_start = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2,
